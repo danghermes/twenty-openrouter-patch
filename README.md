@@ -99,3 +99,19 @@ docker compose up -d --force-recreate twenty-server twenty-worker
 ## Tested on
 - Twenty v2.37.4
 - OpenRouter with Claude Sonnet 4.5 (smart) + GPT-4o Mini (fast)
+
+## Frontend table patch (Provider / Model / Frontier / Cost columns)
+
+The AI models table in Twenty's settings UI is patched to show four columns:
+**Provider** · **Model** · **Frontier** (✓/—) · **Cost /1M**
+
+The patched JS file is included in this repo as `SettingsAiModelsTable-DGpMzVjh.js`.
+Mount it in `docker-compose.yml` under `twenty-server`:
+
+```yaml
+volumes:
+  - ./SettingsAiModelsTable-DGpMzVjh.js:/app/packages/twenty-server/dist/front/assets/SettingsAiModelsTable-DGpMzVjh.js:ro
+```
+
+> **Note:** The filename includes a hash (`DGpMzVjh`) that may change on Twenty updates.
+> Re-apply the patch using `patch-table.js` (Node.js script) against the new file.
