@@ -86,3 +86,13 @@ docker compose up -d --force-recreate twenty-server twenty-worker
 
 - Twenty v2.37.4
 - OpenRouter with `anthropic/claude-sonnet-4.5` and `openai/gpt-4o`
+
+## Dynamic mode (all OpenRouter models)
+
+The main `patch.py` script fetches **all 327+ models** from OpenRouter at patch time and generates a provider entry for each org (anthropic, openai, google, deepseek, meta, etc.). Every model available on OpenRouter becomes selectable in the Twenty AI settings UI.
+
+```bash
+python3 patch.py --key sk-or-v1-YOUR_KEY
+```
+
+The `--include-variants` flag also adds `:batch`, `:free`, `:extended` variants if you want them.
