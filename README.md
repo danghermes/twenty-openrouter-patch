@@ -115,3 +115,18 @@ volumes:
 
 > **Note:** The filename includes a hash (`DGpMzVjh`) that may change on Twenty updates.
 > Re-apply the patch using `patch-table.js` (Node.js script) against the new file.
+
+## App install asset fix (application-install.service.js)
+
+Twenty has a bug where marketplace app public assets (logos, gallery images) are written to the workspace file storage path but read from the server file storage path — causing 404s on all app detail pages.
+
+**Root cause:** `writeFilesToStorage` calls `fileStorageService.writeFile()` for public assets, which writes to `{workspaceId}/{universalId}/public-asset/...`. But the file controller reads from `server/application-registration/{registrationId}/...`.
+
+**Fix:** `application-install.service.js` is patched to route `public-asset` file writes through `serverFileStorageService.writeServerFile()` instead, which writes to the correct server path.
+
+Mount in `docker-compose.yml` under `twenty-server`:
+
+```yaml
+volumes:
+  - ./application-install.service.js:/app/packages/twenty-server/dist/engine/core-modules/application/application-install/application-install.service.js:ro
+```
